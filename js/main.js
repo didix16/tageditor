@@ -1,12 +1,13 @@
-var TagEditor = require("./core");
+var TagEditorManager = require("./manager");
 window.onload = function () {
     // Find all elements with data-tageditor and instantiate it
     let elements = document.querySelectorAll("[data-tageditor]");
     let i = 0;
     for (; i < elements.length; i++) {
         
-        // instantiate
-        TagEditor(elements[i]);
+        // Generate
+        TagEditorManager.build(elements[i]);
     }
 
 };
+window.TagEditorManager = TagEditorManager;

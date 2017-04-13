@@ -5,9 +5,9 @@
   "main": "tageditor.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
+    "build": "lessc css/style.less css/tageditor.css && webpack",
     "build2": "browserify js/main.js -o dist/tageditor.js",
-    "watch": "chokidar \"js/**/*.js\" -c \"npm run build\""
+    "watch": "chokidar \"js/**/*.js\" \"css/**/*.less\" -c \"npm run build\""
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
     "babel-preset-es2015": "^6.24.1",
+    "less": "^2.7.2",
     "webpack": "^2.3.3"
   }
 }
