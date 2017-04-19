@@ -254,9 +254,9 @@ function TagEditor(elem) {
                 this.internalElement.value = newString;
                 // children[1] will be the content
                 console.log(start, string, this.parseHTMLAsText("<b>hola</b>"));
-                this.htmlEditor.children[1].innerHTML = this.parseHTMLAsText("<b>hola</b>");
+                this.htmlEditor.children[1].innerHTML = this.parseHTMLAsText("<strong>hola</strong>");
             }
-            this.htmlEditor.children[1].innerHTML = this.parseHTMLAsText("<b>hola q hay!</b>");
+            this.htmlEditor.children[1].innerHTML = this.parseHTMLAsText("<strong>hola q hay!</strong>");
 
             return this;
         }.bind(this)
@@ -418,9 +418,9 @@ TagEditor.prototype.parseHTMLAsText = function (htmlString) {
 
     return htmlString.replace(/(<([^>]+)>)/g, function (match, tag, tagName, offset, string) {
 
-        var newTxt = "<span class='tag";
+        var newTxt = "<div class='tag";
         if (tagName.charAt(0) === "/") newTxt += "-end";
-        return newTxt + "'>&lt;" + tagName + "&gt;</span>";
+        return newTxt + "'>&lt;" + tagName + "&gt;</div>";
     });
 };
 

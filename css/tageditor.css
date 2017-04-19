@@ -78,6 +78,7 @@
   font-family: "Arial";
 }
 .tageditor-content .tag {
+  display: inline-block;
   background-color: #bebebe;
   border: 1px solid #adadad;
   padding: 3px;
@@ -113,6 +114,7 @@
   margin-top: -5px;
 }
 .tageditor-content .tag-end {
+  display: inline-block;
   background-color: #bebebe;
   border: 1px solid #adadad;
   padding: 3px;
