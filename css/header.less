@@ -4,6 +4,7 @@
 .tageditor-header{
 
     .padding(6px,2px,5px,5px);
+    .border-radius-corners(5px,5px);
     height: auto;
     white-space: normal;
     background: @header-background-color;
@@ -11,7 +12,23 @@
 
     span.tool {
         display: inline-block;
-        background: #9a9a9a;
         .padding(5px,5px,5px,5px);
+        width: @header-tool-width;
+        height: @header-tool-height;
+        border: 1px solid  @header-background-color;
+        text-align: center;
+
+        &:hover{
+            border: 1px solid #727272;
+            background-color: #ebebeb;
+        }
+
+        &:active{
+            background-color: #bcbcbc;
+        }
+
+        &>i{
+            line-height: @header-tool-height;
+        }
     }
 }

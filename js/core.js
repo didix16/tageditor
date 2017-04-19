@@ -17,6 +17,12 @@ function TagEditor(elem) {
     this.internalElement = null;
 
     /**
+     *@var selectedText
+     *@description The selected text inside the editor without HTML tags
+     */
+    this.selectedText = "";
+    
+    /**
      *@var tools
      *@description A HashMap that contains al loaded tools
      */
@@ -24,11 +30,71 @@ function TagEditor(elem) {
 
     // Schema
 
+    let initTools = [
+        new Tool({
+            internalName: "bold",
+            icon: "fa-bold",
+            code: function () {
+                
+                let string = this.internalElement.value;
+                let newString = "";
+                let start = string.indexOf(this.getSelectedText());
+                
+                if (string && start > -1) {
+                    
+                    let end = start + this.getSelectedText().length;
+                    newString = string.substring(0, start) + "<strong>";
+                    newString += this.getSelectedText() + "</strong>" + string.substring(end);
+                    this.internalElement.value = newString;
+                    // children[1] will be the content
+                    console.log(start, string, this.parseHTMLAsText("<b>hola</b>"));
+                    this.htmlEditor.children[1].innerHTML = this.parseHTMLAsText("<b>hola</b>");
+                }
+                this.htmlEditor.children[1].innerHTML = this.parseHTMLAsText("<b>hola q hay!</b>");
+
+                return this;
+
+            }.bind(this)
+        }),
+        new Tool({
+            internalName: "italic",
+            icon: "fa-italic"
+        }),
+        new Tool({
+            internalName: "underline",
+            icon: "fa-underline"
+        }),
+        new Tool({
+            internalName: "align-left",
+            icon: "fa-align-left"
+        }),
+        new Tool({
+            internalName: "align-center",
+            icon: "fa-align-center"
+        }),
+        new Tool({
+            internalName: "align-right",
+            icon: "fa-align-right"
+        }),
+        new Tool({
+            internalName: "align-justify",
+            icon: "fa-align-justify"
+        }),
+        new Tool({
+            internalName: "link",
+            icon: "fa-link"
+        }),
+        new Tool({
+            internalName: "list",
+            icon: "fa-list"
+        }),
+        new Tool({
+            internalName: "list-ol",
+            icon: "fa-list-ol"
+        })
+    ];
     //1. Load tools - Init with default tools
-    this.loadTool(new Tool({
-        internalName: "bold",
-        icon: "fa-bold"
-    }));
+    this.loadTools(initTools);
 
     //2. Replace elem and instert itself
     this.build(elem);
@@ -51,7 +117,7 @@ TagEditor.prototype.templateEditor = {
         return DOMGenerator.createElement("div").addClass("tageditor-header").getElement()
     },
     content: function () {
-        return DOMGenerator.createElement("div").addClass("tageditor-content").attr("contenteditable",true).text("Here the content like text and tags").getElement()
+        return DOMGenerator.createElement("div").addClass("tageditor-content").attr("contenteditable",true).getElement()
     },
     footer: function () {
         return DOMGenerator.createElement("div").addClass("tageditor-footer").text("Here some usefull displays like number of chars etc").getElement()
@@ -79,7 +145,11 @@ TagEditor.prototype.build = function (elem) {
     for (let toolId in this.tools) {
         
         let tool = this.tools[toolId];
-        tool = DOMGenerator.createElement("span").addClass("tool").html('<i class="fa '+tool.icon+'"></i>').getElement();
+        tool = DOMGenerator
+            .createElement("span").addClass("tool")
+            .html('<i class="fa ' + tool.icon + '"></i>')
+            .on("click",tool.code)
+            .getElement();
         toolbar.appendChild(tool);
     }
 
@@ -106,7 +176,7 @@ TagEditor.prototype.build = function (elem) {
 };
 
 /**
- *@description Load a TagEditor tool and append to toolbar
+ *@description Load a single TagEditor tool and append to toolbar
  */
 TagEditor.prototype.loadTool = function (tool) {
     
@@ -120,8 +190,59 @@ TagEditor.prototype.loadTool = function (tool) {
     return this;
 };
 
+/**
+ *@description Load a TagEditor tools through a tool array and append to toolbar
+ */
+TagEditor.prototype.loadTools = function (toolArray) {
+    
+    if (Array.isArray(toolArray)) {
+        
+        for (let i = 0; i < toolArray.length; i++){
+            
+            this.loadTool(toolArray[i]);
+        }
+    }
+
+    return this;
+}
+
+/**
+ *@description Sets the internal selectedText variable and returns the self instance of editor
+ */
+TagEditor.prototype.onSelectedText = function() {
+     let text = (!!document.getSelection) ? document.getSelection().toString() :
+    (!!window.getSelection)   ? window.getSelection().toString() :
+            document.selection.createRange().text;
+    
+     this.selectedText = text;
+     return this;
+}
+
+/**
+ *@description Returns the selected text
+ */
+TagEditor.prototype.getSelectedText = function () {
+    
+    return this.selectedText;
+}
+
+/**
+ *@description Get the HTML code and transform any tag to plain tag
+ */
+TagEditor.prototype.parseHTMLAsText = function (htmlString) {
+    
+    return htmlString.replace(/(<([^>]+)>)/g, function (match,tag,tagName,offset,string) {
+        
+        let newTxt = "<span class='tag";
+        if (tagName.charAt(0) === "/") newTxt += "-end";
+        return newTxt+"'>&lt;"+tagName+"&gt;</span>"
+    });
+}
+
 TagEditor.prototype.registerEvents = function () {
     
+    // Register the selection event
+    this.htmlEditor.addEventListener("mouseup", this.onSelectedText.bind(this));
 };
 
 module.exports = TagEditor;

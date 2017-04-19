@@ -20,4 +20,10 @@ Tool.prototype.internalName = "";
  *@description A fontawesome class icon
  */
 Tool.prototype.icon = "";
+
+Tool.prototype.code = function () {
+    
+    // Execution tool code
+}
+
 module.exports = Tool;

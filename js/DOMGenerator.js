@@ -87,4 +87,10 @@ DOMGenerator.prototype.id = function (data) {
     }
 }
 
+DOMGenerator.prototype.on = function (evtName, callback) {
+    
+    this.elem.addEventListener(evtName, callback);
+    return this;
+};
+
 module.exports = new DOMGenerator();
